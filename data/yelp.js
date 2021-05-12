@@ -25,7 +25,7 @@ const yelp =
           'longitude': 132.4544757
         },
         'transactions': [],
-        'price': '￥',
+        'price': '$',
         'location': {
           'address1': '中区大手町1-7-19',
           'address2': '重石ビル1F',
@@ -65,6 +65,7 @@ const yelp =
           'longitude': 132.453591
         },
         'transactions': [],
+        'price': 'free',
         'location': {
           'address1': '中区大手町1-10',
           'address2': '',
