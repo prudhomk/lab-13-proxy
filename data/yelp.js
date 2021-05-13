@@ -65,7 +65,6 @@ const yelp =
           'longitude': 132.453591
         },
         'transactions': [],
-        'price': 'free',
         'location': {
           'address1': '中区大手町1-10',
           'address2': '',
