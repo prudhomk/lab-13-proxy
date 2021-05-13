@@ -1,116 +1,59 @@
-import app from '../lib/app.js';
-import supertest from 'supertest';
-import client from '../lib/client.js';
-import { execSync } from 'child_process';
+import cityData from '../data/cities';
+import weatherData from '../data/weather';
+import yelpData from '../data/yelp';
+import { formatCity, formatWeather, formatYelp } from '../lib/munge-utils';
 
-const request = supertest(app);
 
 describe('API Routes', () => {
 
-  beforeAll(() => {
-    execSync('npm run setup-db');
-  });
-
-  afterAll(async () => {
-    return client.end();
-  });
-
-  const expectedCats = [
+  const expectedCity = [
     {
-      id: expect.any(Number),
-      name: 'Felix',
-      type: 'Tuxedo',
-      url: 'cats/felix.png',
-      year: 1892,
-      lives: 3,
-      isSidekick: false
+      'formatted_query': 'Hiroshima, Hiroshima Prefecture, Japan',
+      'latitude': '34.3916058',
+      'longitude': '132.4518156'
+    }
+  ];
+  
+  const expectedWeather = [
+    {
+      'forecast': 'Overcast clouds',
+      'time': '2021-05-13',
     },
     {
-      id: expect.any(Number),
-      name: 'Garfield',
-      type: 'Orange Tabby',
-      url: 'cats/garfield.jpeg',
-      year: 1978,
-      lives: 7,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Duchess',
-      type: 'Angora',
-      url: 'cats/duchess.jpeg',
-      year: 1970,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Stimpy',
-      type: 'Manx',
-      url: 'cats/stimpy.jpeg',
-      year: 1990,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Sylvester',
-      type: 'Tuxedo',
-      url: 'cats/sylvester.jpeg',
-      year: 1945,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Tigger',
-      type: 'Orange Tabby',
-      url: 'cats/tigger.jpeg',
-      year: 1928,
-      lives: 8,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hello Kitty',
-      type: 'Angora',
-      url: 'cats/hello-kitty.jpeg',
-      year: 1974,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hobbs',
-      type: 'Orange Tabby',
-      url: 'cats/hobbs.jpeg',
-      year: 1985,
-      lives: 6,
-      isSidekick: true
+      'forecast': 'Overcast clouds',
+      'time': '2021-05-14',
     }
   ];
 
-  // If a GET request is made to /api/cats, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data?
-  it('GET /api/cats', async () => {
-    // act - make the request
-    const response = await request.get('/api/cats');
-
-    // was response OK (200)?
-    expect(response.status).toBe(200);
-
-    // did it return the data we expected?
-    expect(response.body).toEqual(expectedCats);
-
+  const expectedYelp = [
+    {
+      'name': 'Okonomiyaki Nagataya',
+      'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/jXRGizB99IpGmq5FmbXvDg/o.jpg',
+      'price': '$',
+      'rating': 4.5,
+      'url': 'https://www.yelp.com/biz/%E3%81%8A%E5%A5%BD%E3%81%BF%E7%84%BC-%E9%95%B7%E7%94%B0%E5%B1%8B-%E5%BA%83%E5%B3%B6%E5%B8%82?adjust_creative=lofqjVkYQ8FOEv9ip-l2tQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=lofqjVkYQ8FOEv9ip-l2tQ'
+    },
+    {
+      'name': 'Atomic Bomb Dome / Hiroshima Peace Memorial',
+      'image_url': 'https://s3-media4.fl.yelpcdn.com/bphoto/ZSkgkTKUh_-wTyfNE1v9oA/o.jpg',
+      'price': 'free',
+      'rating': 5.0,
+      'url': 'https://www.yelp.com/biz/%E5%8E%9F%E7%88%86%E3%83%89%E3%83%BC%E3%83%A0-%E5%BA%83%E5%B3%B6%E5%B9%B3%E5%92%8C%E8%A8%98%E5%BF%B5%E7%A2%91-%E5%BA%83%E5%B3%B6%E5%B8%82-2?adjust_creative=lofqjVkYQ8FOEv9ip-l2tQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=lofqjVkYQ8FOEv9ip-l2tQ'
+    },
+  ];
+ 
+  test('munges city data', async () => {
+    const output = formatCity(cityData);
+    expect(output).toEqual(expectedCity);
   });
 
-  // If a GET request is made to /api/cats/:id, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data for the cat with that id?
-  test('GET /api/cats/:id', async () => {
-    const response = await request.get('/api/cats/2');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expectedCats[1]);
+  test('munges weather data', async () => {
+    const output = formatWeather(weatherData);
+    expect(output).toEqual(expectedWeather);
+  });
+
+  test('munges yelp data', async () => {
+    const output = formatYelp(yelpData);
+    expect(output).toEqual(expectedYelp);
   });
 });
