@@ -6,13 +6,12 @@ import { formatCity, formatWeather, formatYelp } from '../lib/munge-utils';
 
 describe('API Routes', () => {
 
-  const expectedCity = [
+  const expectedCity = 
     {
       'formatted_query': 'Hiroshima, Hiroshima Prefecture, Japan',
       'latitude': '34.3916058',
       'longitude': '132.4518156'
-    }
-  ];
+    };
   
   const expectedWeather = [
     {
